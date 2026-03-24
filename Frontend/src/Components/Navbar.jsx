@@ -46,13 +46,13 @@ const Navbar = () => {
 				</li>
 				<li>
 					<Link
-						to="/collection"
+						to="/restaurantList"
 						className="flex flex-col items-center gap-1 hover:text-black transition relative"
 					>
 						Restaurant
 						<hr
 							className={`w-2/4 border-none h-[1.5px] bg-gray-700 absolute bottom-[-6px] transition-all duration-300 ${
-								isActive("/collection")
+								isActive("/restaurantList")
 									? "opacity-100 scale-x-100"
 									: "opacity-0 scale-x-0 hover:opacity-75 hover:scale-x-100"
 							}`}
@@ -94,7 +94,7 @@ const Navbar = () => {
 			{/* Right side icons */}
 			<div className="flex items-center gap-8 sm:gap-10">
 				{/* Search – always visible */}
-				<Link to="/search" className="relative group">
+				{/* <Link to="/search" className="relative group">
 					<img
 						src={assets.search_icon}
 						className="w-11 h-11 cursor-pointer"
@@ -103,7 +103,7 @@ const Navbar = () => {
 					<span className="absolute -bottom-9 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2.5 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
 						Search
 					</span>
-				</Link>
+				</Link> */}
 
 				{currentUser ? (
 					<div className="relative">
@@ -134,7 +134,7 @@ const Navbar = () => {
 									My Profile
 								</Link>
 								<Link
-									to="/orders"
+									to="/order"
 									className="block px-5 py-3 text-sm text-gray-800 hover:bg-gray-50"
 									onClick={() => setShowProfileDropdown(false)}
 								>
