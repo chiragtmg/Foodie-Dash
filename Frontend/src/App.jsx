@@ -4,6 +4,8 @@ import Home from "./Pages/Home";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Route, Routes } from "react-router-dom";
 import Login from "./Pages/Login";
+import Navbar from "./Components/Navbar";
+import EditProfile from "./Pages/Profile";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -17,9 +19,12 @@ const App = () => {
 	return (
 		<div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
 			<ToastContainer />
+      <Navbar/>
 			<Routes>
 				<Route path="/" element={<Home />} />
+				<Route path="/editprofile" element={<EditProfile />} />
 				<Route path="/login" element={<GoogleAuthWrapper />} />
+        
 			</Routes>
 		</div>
 	);
