@@ -1,48 +1,83 @@
-// models/Restaurant.js
 import mongoose from "mongoose";
+
+const reviewSchema = new mongoose.Schema(
+	{
+		user: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		},
+		name: {
+			type: String,
+			required: true,
+		},
+		rating: {
+			type: Number,
+			required: true,
+			min: 1,
+			max: 5,
+		},
+		comment: {
+			type: String,
+			required: true,
+		},
+	},
+	{ timestamps: true },
+);
 
 const restaurantSchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
 			required: true,
+			trim: true,
 		},
-
-		description: String,
-
 		cuisine: {
-			type: [String], // e.g. ["Italian", "Fast Food"]
+			type: String,
+			required: true,
+			trim: true,
 		},
-
-		image: String,
-
-		address: {
-			street: String,
-			city: String,
-			lat: Number,
-			lng: Number,
-		},
-
 		rating: {
 			type: Number,
 			default: 0,
+			min: 0,
+			max: 5,
+		},
+		deliveryTime: {
+			type: String,
+			required: true,
+		},
+		image: {
+			type: String,
+			required: true,
+		},
+		location: {
+			type: String,
+			required: true,
+		},
+		popular: {
+			type: String,
+			default: "",
 		},
 
+		// Reviews Array (Embedded)
+		reviews: [reviewSchema],
+
+		// Calculated fields
 		numReviews: {
 			type: Number,
 			default: 0,
 		},
-
-		priceRange: {
-			type: String, // $, $$, $$$
-		},
-
-		owner: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
+		averageRating: {
+			type: Number,
+			default: 0,
 		},
 	},
-	{ timestamps: true },
+	{
+		timestamps: true,
+	},
 );
 
-export default mongoose.model("Restaurant", restaurantSchema);
+const Restaurant = mongoose.model("Restaurant", restaurantSchema);
+
+export default Restaurant;

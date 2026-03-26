@@ -5,6 +5,7 @@ import connectDB from "./config/mongodb.js";
 // import connectCloudinary from "./config/cloudinary.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import restaurantRoutes from "./routes/restaurantRoutes.js";
 
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -24,14 +25,16 @@ app.use(
 		credentials: true, // to connect to frontend
 	}),
 ); // to access backend from any ip
-// app.use(
-// 	"/images",
-// 	express.static(path.join(process.cwd(), "public", "images")),
-// );
+app.use(
+	"/images/restaurants",
+	express.static(path.join(process.cwd(), "public", "images", "restaurants")),
+);
 
 //api end points
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/restaurant", restaurantRoutes);
+
 
 
 app.get("/", (req, res) => {

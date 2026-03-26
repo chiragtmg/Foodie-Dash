@@ -12,6 +12,7 @@ import Cart from "./Pages/Cart";
 import Checkout from "./Pages/CheckOut";
 import OrderTrack from "./Pages/OrderTrack";
 import Order from "./Pages/Order";
+import AddRestaurant from "./Pages/AddRestaurant";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -35,6 +36,7 @@ const App = () => {
 				<Route path="/checkout" element={<Checkout />} />
 				<Route path="/orderTrack" element={<OrderTrack />} />
 				<Route path="/order" element={<Order />} />
+				<Route path="/addRestaurant" element={<AddRestaurant />} />
 				<Route path="/login" element={<GoogleAuthWrapper />} />
         
 			</Routes>
