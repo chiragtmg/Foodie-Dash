@@ -16,6 +16,9 @@ import AddRestaurant from "./Pages/AddRestaurant";
 import MenuItemsList from "./Pages/MenuItemList";
 import AddMenuItem from "./Pages/AddMenuItem";
 import SignUp from "./Pages/Signup";
+import AdminDashboard from "./Pages/AdminDashboard";
+import MainLayout from "./Components/MainLayout";
+import AdminLayout from "./Components/AdminLayout";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -29,22 +32,26 @@ const App = () => {
 	return (
 		<div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
 			<ToastContainer />
-			<Navbar />
 			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/editprofile" element={<EditProfile />} />
-				<Route path="/restaurantList" element={<RestaurantList />} />
-				<Route path="/restaurantDetail/:id" element={<RestaurantDetail />} />
-				<Route path="/cart" element={<Cart />} />
-				<Route path="/checkout" element={<Checkout />} />
-				<Route path="/orderTrack" element={<OrderTrack />} />
-				<Route path="/order" element={<Order />} />
-				<Route path="/addRestaurant" element={<AddRestaurant />} />
-				<Route path="/menu-items" element={<MenuItemsList />} />
-				<Route path="/add-menu-item" element={<AddMenuItem />} />
-				<Route path="/login" element={<GoogleAuthWrapper />} />
-				<Route path="/signup" element={<SignUp />} />
+				<Route element={<MainLayout />}>
+					<Route path="/" element={<Home />} />
+					<Route path="/editprofile" element={<EditProfile />} />
+					<Route path="/restaurantList" element={<RestaurantList />} />
+					<Route path="/restaurantDetail/:id" element={<RestaurantDetail />} />
+					<Route path="/cart" element={<Cart />} />
+					<Route path="/checkout" element={<Checkout />} />
+					<Route path="/orderTrack" element={<OrderTrack />} />
+					<Route path="/order" element={<Order />} />
 
+					<Route path="/login" element={<GoogleAuthWrapper />} />
+					<Route path="/signup" element={<SignUp />} />
+				</Route>
+				<Route element={<AdminLayout />}>
+					<Route path="/admindashboard" element={<AdminDashboard />} />
+					<Route path="/addRestaurant" element={<AddRestaurant />} />
+					<Route path="/menu-items" element={<MenuItemsList />} />
+					<Route path="/add-menu-item" element={<AddMenuItem />} />
+				</Route>
 			</Routes>
 		</div>
 	);

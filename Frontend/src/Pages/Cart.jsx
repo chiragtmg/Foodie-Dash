@@ -42,6 +42,22 @@ const Cart = () => {
     if (newQuantity < 1) return;
     try {
       await apiRequest.put("/cart/update", { menuItemId, quantity: newQuantity });
+     
+      setCartItems((prev) =>
+				prev.map((item) =>
+					item.menuItemId === menuItemId
+						? { ...item, quantity: newQuantity }
+						: item,
+				),
+			);
+
+			setTotal(
+				(prev) =>
+					prev +
+					(newQuantity -
+						cartItems.find((i) => i.menuItemId === menuItemId).quantity) *
+						cartItems.find((i) => i.menuItemId === menuItemId).price,
+			);
       refreshCart();
       toast.success("Quantity updated");
     } catch (err) {

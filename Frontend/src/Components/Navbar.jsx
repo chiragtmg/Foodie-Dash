@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AuthContext } from "../Context/AuthContext";
-// import { CartContext } from "../context/CartContext";
+import { useCart } from "../Context/CartContext";
 
 const Navbar = () => {
 	const { currentUser, logout } = useContext(AuthContext);
@@ -11,8 +11,7 @@ const Navbar = () => {
 	const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 	console.log(currentUser);
 
-	// const { cartCount } = useContext(CartContext);
-	const cartCount = 10;
+	const { cartCount, refreshCart } = useCart();
 
 	const isActive = (path) => location.pathname === path;
 
@@ -93,17 +92,7 @@ const Navbar = () => {
 
 			{/* Right side icons */}
 			<div className="flex items-center gap-8 sm:gap-10">
-				{/* Search – always visible */}
-				{/* <Link to="/search" className="relative group">
-					<img
-						src={assets.search_icon}
-						className="w-11 h-11 cursor-pointer"
-						alt="Search"
-					/>
-					<span className="absolute -bottom-9 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2.5 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-						Search
-					</span>
-				</Link> */}
+				
 
 				{currentUser ? (
 					<div className="relative">
@@ -161,7 +150,7 @@ const Navbar = () => {
 
 				{/* Cart – only visible when logged in */}
 				{currentUser && (
-					<Link to="/cart" className="relative group">
+					<Link to="/cart" className="relative group" onClick={refreshCart}>
 						<img
 							src={assets.cart}
 							className="w-9 h-9 cursor-pointer"
