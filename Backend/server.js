@@ -6,6 +6,7 @@ import connectDB from "./config/mongodb.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js";
+import menuRoutes from "./routes/menuRoutes.js";
 
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -34,6 +35,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
+app.use("/api/menu", menuRoutes);
 
 
 

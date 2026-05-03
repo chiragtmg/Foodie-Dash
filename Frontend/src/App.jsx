@@ -13,6 +13,9 @@ import Checkout from "./Pages/CheckOut";
 import OrderTrack from "./Pages/OrderTrack";
 import Order from "./Pages/Order";
 import AddRestaurant from "./Pages/AddRestaurant";
+import MenuItemsList from "./Pages/MenuItemList";
+import AddMenuItem from "./Pages/AddMenuItem";
+import SignUp from "./Pages/Signup";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -26,7 +29,7 @@ const App = () => {
 	return (
 		<div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
 			<ToastContainer />
-      <Navbar/>
+			<Navbar />
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/editprofile" element={<EditProfile />} />
@@ -37,8 +40,11 @@ const App = () => {
 				<Route path="/orderTrack" element={<OrderTrack />} />
 				<Route path="/order" element={<Order />} />
 				<Route path="/addRestaurant" element={<AddRestaurant />} />
+				<Route path="/menu-items" element={<MenuItemsList />} />
+				<Route path="/add-menu-item" element={<AddMenuItem />} />
 				<Route path="/login" element={<GoogleAuthWrapper />} />
-        
+				<Route path="/signup" element={<SignUp />} />
+
 			</Routes>
 		</div>
 	);
