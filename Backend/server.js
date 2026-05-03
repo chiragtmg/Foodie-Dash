@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -26,9 +27,16 @@ app.use(
 		credentials: true, // to connect to frontend
 	}),
 ); // to access backend from any ip
+const publicPath = path.join(process.cwd(), "public");
+
+// Serve Restaurant Images
 app.use(
 	"/images/restaurants",
-	express.static(path.join(process.cwd(), "public", "images", "restaurants")),
+	express.static(path.join(publicPath, "images", "restaurants")),
+);
+app.use(
+	"/images/menu",
+	express.static(path.join(publicPath, "images", "menu")),
 );
 
 //api end points
@@ -36,8 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/menu", menuRoutes);
-
-
+app.use("/api/cart", cartRoutes);
 
 app.get("/", (req, res) => {
 	res.send("API WOrking");

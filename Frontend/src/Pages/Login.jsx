@@ -13,11 +13,16 @@ const Login = () => {
 	const [error, setError] = useState("");
 	const { updateUser, currentUser } = useContext(AuthContext);
 
-	// useEffect(() => {
-	// 	if (currentUser) {
-	// 		navigate("/");
-	// 	}
-	// }, [currentUser]);
+	useEffect(() => {
+		if (currentUser) {
+			if (currentUser.role === "admin") {
+				navigate("/admindashboard");
+			} else {
+				toast("Already Logged In")
+				navigate("/");
+			}
+		}
+	}, [currentUser]);
 
 	const responseGoogle = async (authResult) => {
 		setIsLoading(true);
@@ -28,16 +33,28 @@ const Login = () => {
 
 			const result = await googleAuth(authResult.code);
 
-			// Backend now returns user directly (no token, no user object wrapper)
-			const { _id, email, username, avatar } = result.data;
+			console.log("🔍 Google Response from Backend:", result.data);
 
-			const userObj = { _id, email, username, avatar };
+			const userObj = {
+				_id: result.data._id,
+				username: result.data.username,
+				email: result.data.email,
+				avatar: result.data.avatar,
+				role: result.data.role || "customer", 
+			};
+
+			console.log("✅ Saving user with role:", userObj.role);
 
 			updateUser(userObj);
 			toast.success("Login successfully");
-			navigate("/");
+
+			if (userObj.role === "admin") {
+				navigate("/admin/orders"); 
+			} else {
+				navigate("/");
+			}
 		} catch (e) {
-			console.log("Error while Google Login...", e);
+			console.error("Error while Google Login...", e);
 			toast.error("Google login failed");
 		} finally {
 			setIsLoading(false);
@@ -56,24 +73,33 @@ const Login = () => {
 		setError("");
 
 		try {
+			console.log("LOGIN DATA:", { email, password });
 			const response = await apiRequest.post(
 				"/auth/login",
 				{ email, password },
-				{ withCredentials: true }, // IMPORTANT
+				{ withCredentials: true }, 
 			);
+			if (response.data.success === false) {
+				setError(response.data.message);
+				toast.error(response.data.message);
+				return;
+			}
 
-			updateUser(response.data);
 			toast.success("Login successfully");
 			const user = response.data.user || response.data;
+			updateUser(response.data);
 			if (user.role === "admin") {
-				navigate("/dashboard");
+				navigate("/admindashboard");
 			} else {
 				navigate("/");
 			}
 		} catch (error) {
-			console.log(error);
-			setError("Invalid credentials");
-			toast.error("Login failed");
+			console.log("LOGIN ERROR:", error.response?.data);
+
+			const message = error.response?.data?.message || "Login failed";
+
+			setError(message); 
+			toast.error(message);
 		} finally {
 			setIsLoading(false);
 		}

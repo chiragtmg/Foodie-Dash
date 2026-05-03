@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { apiRequest, imgBaseURL } from "../Services/API";
+import { toast } from "react-toastify";
 
 const RestaurantDetail = () => {
 	const { id } = useParams();
@@ -10,18 +11,16 @@ const RestaurantDetail = () => {
 	const [menuItems, setMenuItems] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+	const [addingToCart, setAddingToCart] = useState(null); // Track which item is being added
 
 	// Fetch Restaurant + Menu
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				setLoading(true);
-
-				// Fetch Restaurant
 				const res = await apiRequest.get(`/restaurant/get/restaurant/${id}`);
 				setRestaurant(res.data.data || res.data);
 
-				// Fetch Menu Items for this restaurant
 				const menuRes = await apiRequest.get(`/menu/restaurant/${id}`);
 				setMenuItems(menuRes.data.data || []);
 			} catch (err) {
@@ -34,6 +33,43 @@ const RestaurantDetail = () => {
 
 		if (id) fetchData();
 	}, [id]);
+
+	const getImageUrl = (imgPath) => {
+		if (!imgPath) return "https://picsum.photos/id/870/800/400";
+		return imgPath.startsWith("http") ? imgPath : `${imgBaseURL}${imgPath}`;
+	};
+
+	// Add to Cart Function
+	const addToCart = async (item) => {
+		setAddingToCart(item._id);
+
+		try {
+			const res = await apiRequest.post("/cart/add", {
+				menuItemId: item._id,
+				quantity: 1,
+			});
+
+			if (res.data.success) {
+				toast.success(`✅ ${item.name} added to cart!`, {
+					position: "top-right",
+					autoClose: 2000,
+				});
+			}
+		} catch (err) {
+			console.error(err);
+			toast.error(err.response?.data?.message || "Failed to add item to cart");
+		} finally {
+			setAddingToCart(null);
+		}
+	};
+
+	// Group menu items by category
+	const groupedMenu = menuItems.reduce((acc, item) => {
+		const category = item.category || "Other";
+		if (!acc[category]) acc[category] = [];
+		acc[category].push(item);
+		return acc;
+	}, {});
 
 	if (loading)
 		return (
@@ -53,19 +89,6 @@ const RestaurantDetail = () => {
 				Restaurant not found
 			</div>
 		);
-
-	const getImageUrl = (imgPath) => {
-		if (!imgPath) return "https://picsum.photos/id/870/800/400";
-		return imgPath.startsWith("http") ? imgPath : `${imgBaseURL}${imgPath}`;
-	};
-
-	// Group menu items by category
-	const groupedMenu = menuItems.reduce((acc, item) => {
-		const category = item.category || "Other";
-		if (!acc[category]) acc[category] = [];
-		acc[category].push(item);
-		return acc;
-	}, {});
 
 	return (
 		<div className="min-h-screen bg-gray-50">
@@ -143,17 +166,21 @@ const RestaurantDetail = () => {
 															Rs. {item.price}
 														</span>
 													</div>
+
 													{item.description && (
-														<p className="text-gray-600 mt-1 text-sm">
+														<p className="text-gray-600 mt-1 text-sm line-clamp-2">
 															{item.description}
 														</p>
 													)}
 
 													<button
-														className="mt-4 px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-sm font-medium transition"
-														onClick={() => alert(`Added ${item.name} to cart!`)} // Replace with real cart logic later
+														onClick={() => addToCart(item)}
+														disabled={addingToCart === item._id}
+														className="mt-4 px-6 py-2.5 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white rounded-xl text-sm font-medium transition flex items-center gap-2"
 													>
-														Add to Cart
+														{addingToCart === item._id
+															? "Adding..."
+															: "Add to Cart"}
 													</button>
 												</div>
 											</div>
