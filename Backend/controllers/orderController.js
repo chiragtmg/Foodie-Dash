@@ -1,6 +1,6 @@
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
-import MenuItem from "../models/Menu.js";   // ← Changed to MenuItem
+import MenuItem from "../models/menuModel.js";   // ← Changed to MenuItem
 import { sendEmail } from "../utils/sendEmail.js";
 
 export const createOrder = async (req, res) => {

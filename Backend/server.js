@@ -8,6 +8,8 @@ import authRoutes from "./routes/authRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import khaltiRoutes from "./routes/khaltiRoutes.js";
 
 import cookieParser from "cookie-parser";
 import path from "path";
