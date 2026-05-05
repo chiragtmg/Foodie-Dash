@@ -10,7 +10,6 @@ import RestaurantList from "./Pages/RestaurantList";
 import RestaurantDetail from "./Pages/RestaurantDetail";
 import Cart from "./Pages/Cart";
 import Checkout from "./Pages/CheckOut";
-import OrderTrack from "./Pages/OrderTrack";
 import Order from "./Pages/Order";
 import AddRestaurant from "./Pages/AddRestaurant";
 import MenuItemsList from "./Pages/MenuItemList";
@@ -19,6 +18,8 @@ import SignUp from "./Pages/Signup";
 import AdminDashboard from "./Pages/AdminDashboard";
 import MainLayout from "./Components/MainLayout";
 import AdminLayout from "./Components/AdminLayout";
+import MyOrders from "./Pages/MyOrders";
+import AdminOrders from "./Pages/AdminOrders";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -40,7 +41,7 @@ const App = () => {
 					<Route path="/restaurantDetail/:id" element={<RestaurantDetail />} />
 					<Route path="/cart" element={<Cart />} />
 					<Route path="/checkout" element={<Checkout />} />
-					<Route path="/orderTrack" element={<OrderTrack />} />
+					<Route path="/myorders" element={<MyOrders />} />
 					<Route path="/order" element={<Order />} />
 
 					<Route path="/login" element={<GoogleAuthWrapper />} />
@@ -51,6 +52,7 @@ const App = () => {
 					<Route path="/addRestaurant" element={<AddRestaurant />} />
 					<Route path="/menu-items" element={<MenuItemsList />} />
 					<Route path="/add-menu-item" element={<AddMenuItem />} />
+					<Route path="/adminorders" element={<AdminOrders />} />
 				</Route>
 			</Routes>
 		</div>

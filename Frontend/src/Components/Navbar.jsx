@@ -123,7 +123,7 @@ const Navbar = () => {
 									My Profile
 								</Link>
 								<Link
-									to="/order"
+									to="/myorders"
 									className="block px-5 py-3 text-sm text-gray-800 hover:bg-gray-50"
 									onClick={() => setShowProfileDropdown(false)}
 								>

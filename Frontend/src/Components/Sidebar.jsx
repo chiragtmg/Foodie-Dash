@@ -112,7 +112,7 @@ const Sidebar = () => {
 				<Link
 					to="/adminorders"
 					className={`block px-4 py-3 rounded-lg font-medium transition ${
-						isActive("/adminorders") // ✅ FIXED HERE
+						isActive("/adminorders") 
 							? "bg-indigo-600 text-white shadow"
 							: "text-gray-600 hover:bg-gray-100"
 					}`}
