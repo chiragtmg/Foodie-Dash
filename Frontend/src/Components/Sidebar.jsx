@@ -75,6 +75,16 @@ const Sidebar = () => {
 				>
 					Dashboard
 				</Link>
+				<Link
+					to="/adminRestaurants"
+					className={`block px-4 py-3 rounded-lg font-medium transition ${
+						isActive("/adminRestaurants")
+							? "bg-indigo-600 text-white shadow"
+							: "text-gray-600 hover:bg-gray-100"
+					}`}
+				>
+					Restaurants
+				</Link>
 
 				<Link
 					to="/addRestaurant"
@@ -85,17 +95,6 @@ const Sidebar = () => {
 					}`}
 				>
 					Add Restaurant
-				</Link>
-
-				<Link
-					to="/add-menu-item"
-					className={`block px-4 py-3 rounded-lg font-medium transition ${
-						isActive("/add-menu-item")
-							? "bg-indigo-600 text-white shadow"
-							: "text-gray-600 hover:bg-gray-100"
-					}`}
-				>
-					Add Items
 				</Link>
 
 				<Link
@@ -112,7 +111,7 @@ const Sidebar = () => {
 				<Link
 					to="/adminorders"
 					className={`block px-4 py-3 rounded-lg font-medium transition ${
-						isActive("/adminorders") 
+						isActive("/adminorders")
 							? "bg-indigo-600 text-white shadow"
 							: "text-gray-600 hover:bg-gray-100"
 					}`}
@@ -122,7 +121,7 @@ const Sidebar = () => {
 			</nav>
 
 			<div className="p-4 text-xs text-gray-400 border-t">
-				© 2026 Clothing Admin
+				© 2026 Foodie Dash
 			</div>
 		</aside>
 	);

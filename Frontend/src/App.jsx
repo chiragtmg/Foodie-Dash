@@ -20,6 +20,7 @@ import MainLayout from "./Components/MainLayout";
 import AdminLayout from "./Components/AdminLayout";
 import MyOrders from "./Pages/MyOrders";
 import AdminOrders from "./Pages/AdminOrders";
+import AdminRestaurants from "./Pages/AdminRestaurants";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -49,6 +50,7 @@ const App = () => {
 				</Route>
 				<Route element={<AdminLayout />}>
 					<Route path="/admindashboard" element={<AdminDashboard />} />
+					<Route path="/adminRestaurants" element={<AdminRestaurants />} />
 					<Route path="/addRestaurant" element={<AddRestaurant />} />
 					<Route path="/menu-items" element={<MenuItemsList />} />
 					<Route path="/add-menu-item" element={<AddMenuItem />} />
