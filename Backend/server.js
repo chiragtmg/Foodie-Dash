@@ -45,6 +45,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/order", orderRoutes);        
+app.use("/api/khalti", khaltiRoutes);
 
 app.get("/", (req, res) => {
 	res.send("API WOrking");

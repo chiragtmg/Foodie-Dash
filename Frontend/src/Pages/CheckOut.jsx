@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiRequest, imgBaseURL } from "../Services/API";
+import { apiRequest } from "../Services/API";
 import { toast } from "react-toastify";
-import { useCart } from "../Context/CartContext";
-import { AuthContext } from "../Context/AuthContext";
+import { useCart } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContext";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -12,11 +12,12 @@ const Checkout = () => {
 
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    street: "",
-    city: "Pokhara",
+    address: "",
     instructions: "",
   });
 
@@ -29,9 +30,8 @@ const Checkout = () => {
   const fetchCart = async () => {
     try {
       const res = await apiRequest.get("/cart");
-      setCartItems(res.data.cart || res.data.items || []);
+      setCartItems(res.data.cart || []);
     } catch (err) {
-      console.error(err);
       toast.error("Failed to load cart");
     }
   };
@@ -45,7 +45,7 @@ const Checkout = () => {
   };
 
   const handlePlaceOrder = async () => {
-    if (!formData.fullName || !formData.phone || !formData.street) {
+    if (!formData.fullName || !formData.phone || !formData.address) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -54,7 +54,7 @@ const Checkout = () => {
 
     try {
       const orderData = {
-        items: cartItems.map(item => ({
+        items: cartItems.map((item) => ({
           menuItemId: item.menuItemId,
           name: item.name,
           price: item.price,
@@ -64,22 +64,20 @@ const Checkout = () => {
         shippingDetails: {
           fullName: formData.fullName,
           phone: formData.phone,
-          address: `${formData.street}, ${formData.city}`,
+          address: formData.address,
           instructions: formData.instructions,
         },
         paymentMethod,
-        subtotal,
-        deliveryFee,
         totalAmount: total,
       };
 
       const res = await apiRequest.post("/order/create", orderData);
 
       if (res.data.success) {
-        toast.success("Order placed successfully! 🎉");
+        toast.success("✅ Order placed successfully!");
         await apiRequest.delete("/cart/clear");
         refreshCart();
-        setTimeout(() => navigate("/myorders"), 1800);
+        setTimeout(() => navigate("/myorders"), 1500);
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to place order");
@@ -88,18 +86,41 @@ const Checkout = () => {
     }
   };
 
-  if (cartItems.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold">Your cart is empty</h2>
-          <button onClick={() => navigate("/restaurants")} className="mt-6 px-8 py-3 bg-orange-600 text-white rounded-xl">
-            Browse Restaurants
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Khalti Payment
+  const handleKhaltiPayment = async () => {
+    if (!formData.fullName || !formData.phone || !formData.address) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const res = await apiRequest.post("/khalti/initiate", {
+        amount: total,
+        shippingDetails: formData,
+      });
+
+      if (res.data.success) {
+        // Store pending order data
+        localStorage.setItem(
+          "pendingKhaltiOrder",
+          JSON.stringify({
+            cartItems,
+            shippingDetails: formData,
+            totalAmount: total,
+            userId: currentUser._id,
+          })
+        );
+
+        window.location.href = res.data.paymentUrl;
+      }
+    } catch (error) {
+      toast.error("Failed to initiate Khalti payment");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
@@ -107,7 +128,7 @@ const Checkout = () => {
         <h1 className="text-4xl font-bold text-center mb-10">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Delivery Information */}
+          {/* Shipping Form */}
           <div className="bg-white rounded-3xl p-8 shadow">
             <h2 className="text-2xl font-bold mb-8">Delivery Information</h2>
 
@@ -118,7 +139,7 @@ const Checkout = () => {
                 placeholder="Full Name *"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500 outline-none"
+                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500"
                 required
               />
 
@@ -128,61 +149,53 @@ const Checkout = () => {
                 placeholder="Phone Number *"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500 outline-none"
+                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500"
                 required
               />
 
               <input
                 type="text"
-                name="street"
-                placeholder="Street Address / Landmark *"
-                value={formData.street}
+                name="address"
+                placeholder="Delivery Address *"
+                value={formData.address}
                 onChange={handleChange}
-                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500 outline-none"
+                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500"
                 required
-              />
-
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500 outline-none"
               />
 
               <textarea
                 name="instructions"
-                placeholder="Special Instructions (optional)"
+                placeholder="Any special instructions? (Optional)"
                 value={formData.instructions}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500 outline-none resize-y"
+                className="w-full px-6 py-4 border rounded-2xl focus:border-orange-500 resize-y"
               />
             </div>
           </div>
 
-          {/* Order Summary + Payment */}
+          {/* Order Summary */}
           <div className="bg-white rounded-3xl p-8 shadow h-fit sticky top-8">
             <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
 
-            <div className="space-y-4 mb-8 max-h-80 overflow-auto">
+            <div className="space-y-4 max-h-72 overflow-auto mb-8">
               {cartItems.map((item) => (
-                <div key={item.menuItemId} className="flex justify-between items-center border-b pb-3">
+                <div key={item.menuItemId} className="flex justify-between">
                   <div>
-                    <p className="font-medium">{item.name}</p>
+                    <p>{item.name}</p>
                     <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                   </div>
-                  <p className="font-semibold">Rs. {item.price * item.quantity}</p>
+                  <p className="font-medium">Rs. {item.price * item.quantity}</p>
                 </div>
               ))}
             </div>
 
-            <div className="border-t pt-6 space-y-4 text-lg">
-              <div className="flex justify-between">
+            <div className="border-t pt-6 space-y-3">
+              <div className="flex justify-between text-lg">
                 <span>Subtotal</span>
                 <span>Rs. {subtotal}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-lg">
                 <span>Delivery Fee</span>
                 <span>Rs. {deliveryFee}</span>
               </div>
@@ -192,33 +205,36 @@ const Checkout = () => {
               </div>
             </div>
 
-            {/* Payment Method */}
+            {/* Payment Options */}
             <div className="mt-10">
               <h3 className="text-xl font-semibold mb-4">Payment Method</h3>
               <div className="space-y-3">
                 <button
                   onClick={() => setPaymentMethod("cod")}
-                  className={`w-full py-4 rounded-2xl border-2 transition ${paymentMethod === "cod" ? "border-orange-600 bg-orange-50" : "border-gray-200"}`}
+                  className={`w-full py-4 rounded-2xl border-2 ${paymentMethod === "cod" ? "border-orange-600 bg-orange-50" : "border-gray-200"}`}
                 >
-                  Cash on Delivery (COD)
+                  Cash on Delivery
                 </button>
 
                 <button
-                  onClick={() => setPaymentMethod("online")}
-                  className={`w-full py-4 rounded-2xl border-2 transition ${paymentMethod === "online" ? "border-orange-600 bg-orange-50" : "border-gray-200"}`}
-                  disabled
+                  onClick={() => setPaymentMethod("khalti")}
+                  className={`w-full py-4 rounded-2xl border-2 ${paymentMethod === "khalti" ? "border-purple-600 bg-purple-50" : "border-gray-200"}`}
                 >
-                  Online Payment (Coming Soon)
+                  Pay with Khalti
                 </button>
               </div>
             </div>
 
             <button
-              onClick={handlePlaceOrder}
-              disabled={loading}
-              className="w-full mt-10 py-5 bg-orange-600 hover:bg-orange-700 text-white text-xl font-semibold rounded-2xl transition disabled:opacity-70"
+              onClick={paymentMethod === "khalti" ? handleKhaltiPayment : handlePlaceOrder}
+              disabled={loading || isProcessing}
+              className="w-full mt-10 py-5 bg-orange-600 hover:bg-orange-700 text-white text-xl font-semibold rounded-2xl disabled:opacity-70"
             >
-              {loading ? "Placing Order..." : `Pay Rs. ${total} & Place Order`}
+              {loading || isProcessing
+                ? "Processing..."
+                : paymentMethod === "khalti"
+                ? `Pay Rs. ${total} with Khalti`
+                : `Place Order - Rs. ${total}`}
             </button>
           </div>
         </div>
