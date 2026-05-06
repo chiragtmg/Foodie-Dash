@@ -144,7 +144,7 @@ export default function MenuItemsList() {
                         </td>
                         <td className="px-6 py-4 text-center space-x-3">
                           <button
-                            onClick={() => navigate(`/admin/edit-menu-item/${item._id}`)}
+                            onClick={() => navigate(`/editMenuItem/${item._id}`)}
                             className="text-blue-600 hover:text-blue-800 font-medium"
                           >
                             Edit

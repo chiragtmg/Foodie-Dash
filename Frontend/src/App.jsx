@@ -23,6 +23,7 @@ import AdminOrders from "./Pages/AdminOrders";
 import AdminRestaurants from "./Pages/AdminRestaurants";
 import KhaltiSuccess from "./Pages/KhaltiSuccess";
 import EditRestaurant from "./Pages/EditRestaurant";
+import EditMenuItem from "./Pages/EditMenuItem";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -55,8 +56,9 @@ const App = () => {
 					<Route path="/admindashboard" element={<AdminDashboard />} />
 					<Route path="/adminRestaurants" element={<AdminRestaurants />} />
 					<Route path="/addRestaurant" element={<AddRestaurant />} />
-					<Route path="/editRestaurant" element={<EditRestaurant />} />
+					<Route path="/editRestaurant/:id" element={<EditRestaurant />} />
 					<Route path="/menu-items" element={<MenuItemsList />} />
+					<Route path="/editMenuItem/:id" element={<EditMenuItem/>} />
 					<Route path="/add-menu-item" element={<AddMenuItem />} />
 					<Route path="/adminorders" element={<AdminOrders />} />
 				</Route>

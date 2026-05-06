@@ -146,7 +146,7 @@ const RestaurantList = () => {
 							return (
 								<div
 									key={restaurant._id}
-									onClick={() => navigate(`/restaurant/${restaurant._id}`)}
+									onClick={() => navigate(`/restaurantDetail/${restaurant._id}`)}
 									className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all cursor-pointer group"
 								>
 									<div className="relative h-64">
