@@ -7,77 +7,35 @@ const reviewSchema = new mongoose.Schema(
 			ref: "User",
 			required: true,
 		},
-		name: {
-			type: String,
-			required: true,
-		},
-		rating: {
-			type: Number,
-			required: true,
-			min: 1,
-			max: 5,
-		},
-		comment: {
-			type: String,
-			required: true,
-		},
+		name: { type: String, required: true },
+		rating: { type: Number, required: true, min: 1, max: 5 },
+		comment: { type: String, required: true },
 	},
 	{ timestamps: true },
 );
 
 const restaurantSchema = new mongoose.Schema(
 	{
-		name: {
-			type: String,
-			required: true,
-			trim: true,
-		},
-		cuisine: {
-			type: String,
-			required: true,
-			trim: true,
-		},
-		rating: {
-			type: Number,
-			default: 0,
-			min: 0,
-			max: 5,
-		},
-		deliveryTime: {
-			type: String,
-			required: true,
-		},
-		image: {
-			type: String,
-			required: true,
-		},
-		location: {
-			type: String,
-			required: true,
-		},
-		popular: {
-			type: String,
-			default: "",
+		name: { type: String, required: true, trim: true },
+		cuisine: { type: String, required: true, trim: true },
+		rating: { type: Number, default: 0 },
+		deliveryTime: { type: String, required: true },
+		image: { type: String, required: true },
+		location: { type: String, required: true },
+
+		// Map Coordinates
+		coordinates: {
+			type: { type: String, enum: ["Point"], default: "Point" },
+			coordinates: { type: [Number], default: [0, 0] }, // [longitude, latitude]
 		},
 
-		// Reviews Array (Embedded)
+		popular: { type: String, default: "" },
 		reviews: [reviewSchema],
-
-		// Calculated fields
-		numReviews: {
-			type: Number,
-			default: 0,
-		},
-		averageRating: {
-			type: Number,
-			default: 0,
-		},
+		numReviews: { type: Number, default: 0 },
+		averageRating: { type: Number, default: 0 },
 	},
-	{
-		timestamps: true,
-	},
+	{ timestamps: true },
 );
 
 const Restaurant = mongoose.model("Restaurant", restaurantSchema);
-
 export default Restaurant;

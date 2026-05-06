@@ -135,7 +135,7 @@ const AdminRestaurants = () => {
                         <td className="px-6 py-5 text-center">{restaurant.deliveryTime}</td>
                         <td className="px-6 py-5 text-center space-x-4">
                           <button
-                            onClick={() => navigate(`/admin/edit-restaurant/${restaurant._id}`)}
+                            onClick={() => navigate(`/editRestaurant/${restaurant._id}`)}
                             className="text-blue-600 hover:text-blue-800 font-medium"
                           >
                             Edit

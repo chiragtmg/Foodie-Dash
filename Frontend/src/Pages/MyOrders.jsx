@@ -104,6 +104,12 @@ const MyOrders = () => {
                         })}
                       </p>
                     </div>
+                    <div className="mt-3 md:mt-0 text-right">
+                      <p className="text-sm text-gray-500">Payment Method</p>
+                      <p className="font-medium">
+                        {order.paymentMethod}
+                      </p>
+                    </div>
 
                     <div className="mt-4 md:mt-0">
                       <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${getStatusColor(order.orderStatus)}`}>

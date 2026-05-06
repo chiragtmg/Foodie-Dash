@@ -95,7 +95,7 @@ const Home = () => {
             {filteredRestaurants.map((restaurant) => (
               <div
                 key={restaurant._id || restaurant.id}
-                onClick={() => navigate(`/restaurant/${restaurant._id || restaurant.id}`)}
+                onClick={() => navigate(`/restaurantDetail/${restaurant._id || restaurant.id}`)}
                 className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
               >
                 <div className="relative">
@@ -108,7 +108,7 @@ const Home = () => {
                     }}
                   />
                   <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-sm font-semibold shadow flex items-center gap-1">
-                    ⭐ {restaurant.rating || "4.5"}
+                    ⭐ {restaurant.averageRating}
                   </div>
                 </div>
 

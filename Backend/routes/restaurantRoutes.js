@@ -7,6 +7,7 @@ import {
 	deleteRestaurant,
 	getAllRestaurants,
 	getRestaurantById,
+	addReview,
 } from "../controllers/restaurantController.js";
 
 const router = express.Router();
@@ -28,5 +29,7 @@ router.put(
 );
 
 router.delete("/delete/restaurant/:id", verifyToken, deleteRestaurant);
+
+router.post("/:id/review", verifyToken, addReview);
 
 export default router;

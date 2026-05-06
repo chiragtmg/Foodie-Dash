@@ -59,63 +59,63 @@ export const createRestaurant = async (req, res) => {
 };
 
 // Add Review to Restaurant
-export const addReview = async (req, res) => {
-	try {
-		const { rating, comment } = req.body;
-		const restaurantId = req.params.id;
+// export const addReview = async (req, res) => {
+// 	try {
+// 		const { rating, comment } = req.body;
+// 		const restaurantId = req.params.id;
 
-		const restaurant = await Restaurant.findById(restaurantId);
+// 		const restaurant = await Restaurant.findById(restaurantId);
 
-		if (!restaurant) {
-			return res.status(404).json({
-				success: false,
-				message: "Restaurant not found",
-			});
-		}
+// 		if (!restaurant) {
+// 			return res.status(404).json({
+// 				success: false,
+// 				message: "Restaurant not found",
+// 			});
+// 		}
 
-		// Check if user already reviewed
-		const alreadyReviewed = restaurant.reviews.find(
-			(r) => r.user.toString() === req.user._id.toString(),
-		);
+// 		// Check if user already reviewed
+// 		const alreadyReviewed = restaurant.reviews.find(
+// 			(r) => r.user.toString() === req.user._id.toString(),
+// 		);
 
-		if (alreadyReviewed) {
-			return res.status(400).json({
-				success: false,
-				message: "You have already reviewed this restaurant",
-			});
-		}
+// 		if (alreadyReviewed) {
+// 			return res.status(400).json({
+// 				success: false,
+// 				message: "You have already reviewed this restaurant",
+// 			});
+// 		}
 
-		const review = {
-			user: req.user._id,
-			name: req.user.name || "Anonymous",
-			rating: Number(rating),
-			comment,
-		};
+// 		const review = {
+// 			user: req.user._id,
+// 			name: req.user.name || "Anonymous",
+// 			rating: Number(rating),
+// 			comment,
+// 		};
 
-		restaurant.reviews.push(review);
+// 		restaurant.reviews.push(review);
 
-		// Update average rating
-		restaurant.numReviews = restaurant.reviews.length;
-		restaurant.averageRating =
-			restaurant.reviews.reduce((acc, item) => acc + item.rating, 0) /
-			restaurant.numReviews;
+// 		// Update average rating
+// 		restaurant.numReviews = restaurant.reviews.length;
+// 		restaurant.averageRating =
+// 			restaurant.reviews.reduce((acc, item) => acc + item.rating, 0) /
+// 			restaurant.numReviews;
 
-		await restaurant.save();
+// 		await restaurant.save();
 
-		res.status(201).json({
-			success: true,
-			message: "Review added successfully",
-			data: restaurant,
-		});
-	} catch (error) {
-		console.error("Error adding review:", error);
-		res.status(500).json({
-			success: false,
-			message: "Server error while adding review",
-			error: error.message,
-		});
-	}
-};
+// 		res.status(201).json({
+// 			success: true,
+// 			message: "Review added successfully",
+// 			data: restaurant,
+// 		});
+// 	} catch (error) {
+// 		console.error("Error adding review:", error);
+// 		res.status(500).json({
+// 			success: false,
+// 			message: "Server error while adding review",
+// 			error: error.message,
+// 		});
+// 	}
+// };
 
 // Get All Restaurants
 export const getAllRestaurants = async (req, res) => {
@@ -286,4 +286,67 @@ export const deleteRestaurant = async (req, res) => {
 			error: error.message,
 		});
 	}
+};
+
+export const addReview = async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    const restaurantId = req.params.id;
+
+    if (!rating || !comment?.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating and comment are required",
+      });
+    }
+
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurant not found",
+      });
+    }
+
+    // Prevent duplicate reviews
+    const alreadyReviewed = restaurant.reviews.find(
+      (r) => r.user.toString() === req.userId.toString()
+    );
+
+    if (alreadyReviewed) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already reviewed this restaurant",
+      });
+    }
+
+    const review = {
+      user: req.userId,
+      name: req.user?.username || req.user?.name || "Anonymous",
+      rating: Number(rating),
+      comment: comment.trim(),
+    };
+
+    restaurant.reviews.push(review);
+
+    // Update stats
+    restaurant.numReviews = restaurant.reviews.length;
+    restaurant.averageRating =
+      restaurant.reviews.reduce((acc, item) => acc + item.rating, 0) /
+      restaurant.numReviews;
+
+    await restaurant.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Review added successfully",
+      data: restaurant,
+    });
+  } catch (error) {
+    console.error("Error adding review:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while adding review",
+    });
+  }
 };
