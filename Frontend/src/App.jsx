@@ -14,7 +14,7 @@ import Order from "./Pages/Order";
 import AddRestaurant from "./Pages/AddRestaurant";
 import MenuItemsList from "./Pages/MenuItemList";
 import AddMenuItem from "./Pages/AddMenuItem";
-import SignUp from "./Pages/Signup";
+import SignUp from "./Pages/SignUp";
 import AdminDashboard from "./Pages/AdminDashboard";
 import MainLayout from "./Components/MainLayout";
 import AdminLayout from "./Components/AdminLayout";
@@ -62,7 +62,7 @@ const App = () => {
 					<Route path="/addRestaurant" element={<AddRestaurant />} />
 					<Route path="/editRestaurant/:id" element={<EditRestaurant />} />
 					<Route path="/menu-items" element={<MenuItemsList />} />
-					<Route path="/editMenuItem/:id" element={<EditMenuItem/>} />
+					<Route path="/editMenuItem/:id" element={<EditMenuItem />} />
 					<Route path="/add-menu-item" element={<AddMenuItem />} />
 					<Route path="/adminorders" element={<AdminOrders />} />
 				</Route>
