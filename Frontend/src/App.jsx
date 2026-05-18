@@ -24,6 +24,8 @@ import AdminRestaurants from "./Pages/AdminRestaurants";
 import KhaltiSuccess from "./Pages/KhaltiSuccess";
 import EditRestaurant from "./Pages/EditRestaurant";
 import EditMenuItem from "./Pages/EditMenuItem";
+import About from "./Pages/About";
+import Contact from "./Pages/Contact";
 
 const App = () => {
 	const GoogleAuthWrapper = () => {
@@ -48,6 +50,8 @@ const App = () => {
 					<Route path="/myorders" element={<MyOrders />} />
 					<Route path="/order" element={<Order />} />
 					<Route path="/khalti-success" element={<KhaltiSuccess />} />
+					<Route path="/about" element={<About />} />
+					<Route path="/contact" element={<Contact />} />
 
 					<Route path="/login" element={<GoogleAuthWrapper />} />
 					<Route path="/signup" element={<SignUp />} />
