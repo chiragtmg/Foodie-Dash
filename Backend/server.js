@@ -25,7 +25,7 @@ app.use(express.json()); //request passed to json
 app.use(cookieParser()); //used as pocket for token to store
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: "https://foodie-dash-frontend.onrender.com/",
 		credentials: true, // to connect to frontend
 	}),
 ); // to access backend from any ip
@@ -47,7 +47,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/cart", cartRoutes);
-app.use("/api/order", orderRoutes);        
+app.use("/api/order", orderRoutes);
 app.use("/api/khalti", khaltiRoutes);
 
 app.get("/", (req, res) => {
