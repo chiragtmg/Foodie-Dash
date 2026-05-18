@@ -3,7 +3,7 @@ import { apiRequest, imgBaseURL } from "../Services/API";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
-import SideBar from "../Components/SideBar";
+import SideBar from "../Components/Sidebar";
 
 const AdminRestaurants = () => {
 	const [restaurants, setRestaurants] = useState([]);
